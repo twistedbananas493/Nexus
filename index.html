@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Docs - Language Arts Essay</title>
+    <link rel="shortcut icon" href="https://gstatic.com" type="image/x-icon">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            font-family: monospace;
+            overflow: hidden;
+            width: 100vw; height: 100vh;
+        }
+
+        /* Full Screen Calculator Gate Overlay */
+        #nexus-stealth-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #0b0c10;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .calc-frame {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            width: 280px;
+            border: 2px solid #45f3ff;
+            box-shadow: 0 0 25px rgba(69, 243, 255, 0.15);
+        }
+        .calc-header {
+            color: #45f3ff;
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        #calc-display {
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #333;
+            text-align: right;
+            padding: 10px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            outline: none;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .calc-grid button {
+            color: #fff;
+            padding: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-num { background-color: #333; }
+        .btn-op { background-color: #ff4757; }
+        .btn-eq { background-color: #2ed573; grid-column: span 2; }
+
+        /* Secret Dashboard Content */
+        .hub-view {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; padding: 20px;
+            background-color: #0b0c10;
+        }
+        .hub-header {
+            color: #45f3ff;
+            margin: 10px 0 20px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        .menu-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .track-btn {
+            background-color: #1f2833;
+            color: #45f3ff;
+            border: 1px solid #45f3ff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .track-btn:hover, .track-btn.active {
+            background-color: #45f3ff;
+            color: #0b0c10;
+        }
+        .frame-wrapper {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+        iframe {
+            width: 95%; max-width: 1000px; height: 100%;
+            border: 2px solid #45f3ff; border-radius: 8px;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LAYER 1: PITCH BLACK OVERLAY CALCULATOR -->
+    <div id="nexus-stealth-layer">
+        <div class="calc-frame">
+            <div class="calc-header">[ NEXUS CALC V3.5 ]</div>
+            <input id="calc-display" readonly placeholder="0">
+            <div class="calc-grid">
+                <button class="btn-num" onclick="press('7')">7</button>
+                <button class="btn-num" onclick="press('8')">8</button>
+                <button class="btn-num" onclick="press('9')">9</button>
+                <button class="btn-op" onclick="press('/')">/</button>
+                <button class="btn-num" onclick="press('4')">4</button>
+                <button class="btn-num" onclick="press('5')">5</button>
+                <button class="btn-num" onclick="press('6')">6</button>
+                <button class="btn-op" onclick="press('*')">*</button>
+                <button class="btn-num" onclick="press('1')">1</button>
+                <button class="btn-num" onclick="press('2')">2</button>
+                <button class="btn-num" onclick="press('3')">3</button>
+                <button class="btn-op" onclick="press('-')">-</button>
+                <button class="btn-op" onclick="clearCalc()">C</button>
+                <button class="btn-num" onclick="press('0')">0</button>
+                <button class="btn-eq" onclick="evaluateInput()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 2: PROTECTED MULTI-GAME ENVIRONMENTAL DASHBOARD -->
+    <div class="hub-view">
+        <div class="hub-header">[ NEXUS MULTI-VEHICLE SYSTEM ]</div>
+        <div class="menu-bar">
+            <button class="track-btn active" onclick="loadGame('cars', this)">🏎️ RACING</button>
+            <button class="track-btn" onclick="loadGame('shooter', this)">🔫 SHOOTER</button>
+            <button class="track-btn" onclick="loadGame('voxel', this)">📦 VOXEL CREATIVE</button>
+        </div>
+        <div class="frame-wrapper">
+            <iframe id="game-core-viewport" src="https://bitbucket.io" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // QUICK PANIC REDIRECT BUTTON
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.location.replace('https://google.com');
+            }
+        });
+
+        // MULTI-TRACK LINKS SELECTION DATA
+        const tracks = {
+            cars: "https://bitbucket.io",
+            shooter: "https://github.io",
+            voxel: "https://github.io"
+        };
+
+        function loadGame(trackKey, element) {
+            document.getElementById("game-core-viewport").src = tracks[trackKey];
+            document.querySelectorAll('.track-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // MATRIX SEQUENCE PIN RECOGNITION
+        let currentInput = "";
+        let securityStage = 1;
+        const secretKeys = { step1: "7", step2: "77", step3: "777" };
+
+        function press(val) {
+            currentInput += val;
+            document.getElementById("calc-display").value = currentInput;
+        }
+
+        function clearCalc() {
+            currentInput = "";
+            document.getElementById("calc-display").value = "";
+        }
+
+        function evaluateInput() {
+            const display = document.getElementById("calc-display");
+            
+            if (securityStage === 1) {
+                if (currentInput === secretKeys.step1) {
+                    securityStage = 2; clearCalc(); display.placeholder = "STAGE 2";
+                } else { runStandardMath(); }
+            }
+            else if (securityStage === 2) {
+                if (currentInput === secretKeys.step2) {
+                    securityStage = 3; clearCalc(); display.placeholder = "STAGE 3";
+                } else { securityStage = 1; runStandardMath(); }
+            }
+            else if (securityStage === 3) {
+                if (currentInput === secretKeys.step3) {
+                    document.getElementById("nexus-stealth-layer").remove(); // Explodes interface wall!
+                } else { securityStage = 1; runStandardMath(); }
+            }
+        }
+
+        function runStandardMath() {
+            try {
+                let solution = eval(currentInput);
+                document.getElementById("calc-display").value = solution;
+                currentInput = solution.toString();
+            } catch(e) {
+                document.getElementById("calc-display").value = "Error";
+                currentInput = "";
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Docs - Language Arts Essay</title>
+    <link rel="shortcut icon" href="https://gstatic.com" type="image/x-icon">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            font-family: monospace;
+            overflow: hidden;
+            width: 100vw; height: 100vh;
+        }
+
+        /* Full Screen Calculator Gate Overlay */
+        #nexus-stealth-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #0b0c10;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .calc-frame {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            width: 280px;
+            border: 2px solid #45f3ff;
+            box-shadow: 0 0 25px rgba(69, 243, 255, 0.15);
+        }
+        .calc-header {
+            color: #45f3ff;
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        #calc-display {
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #333;
+            text-align: right;
+            padding: 10px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            outline: none;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .calc-grid button {
+            color: #fff;
+            padding: 14px;
+            border: none;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-num { background-color: #333; }
+        .btn-op { background-color: #ff4757; }
+        .btn-eq { background-color: #2ed573; grid-column: span 2; }
+
+        /* Secret Dashboard Content */
+        .hub-view {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; padding: 20px;
+            background-color: #0b0c10;
+        }
+        .hub-header {
+            color: #45f3ff;
+            margin: 10px 0 20px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        .menu-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .track-btn {
+            background-color: #1f2833;
+            color: #45f3ff;
+            border: 1px solid #45f3ff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .track-btn:hover, .track-btn.active {
+            background-color: #45f3ff;
+            color: #0b0c10;
+        }
+        .frame-wrapper {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+        iframe {
+            width: 95%; max-width: 1000px; height: 100%;
+            border: 2px solid #45f3ff; border-radius: 8px;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LAYER 1: PITCH BLACK OVERLAY CALCULATOR -->
+    <div id="nexus-stealth-layer">
+        <div class="calc-frame">
+            <div class="calc-header">[ NEXUS CALC V3.5 ]</div>
+            <input id="calc-display" readonly placeholder="0">
+            <div class="calc-grid">
+                <button class="btn-num" onclick="press('7')">7</button>
+                <button class="btn-num" onclick="press('8')">8</button>
+                <button class="btn-num" onclick="press('9')">9</button>
+                <button class="btn-op" onclick="press('/')">/</button>
+                <button class="btn-num" onclick="press('4')">4</button>
+                <button class="btn-num" onclick="press('5')">5</button>
+                <button class="btn-num" onclick="press('6')">6</button>
+                <button class="btn-op" onclick="press('*')">*</button>
+                <button class="btn-num" onclick="press('1')">1</button>
+                <button class="btn-num" onclick="press('2')">2</button>
+                <button class="btn-num" onclick="press('3')">3</button>
+                <button class="btn-op" onclick="press('-')">-</button>
+                <button class="btn-op" onclick="clearCalc()">C</button>
+                <button class="btn-num" onclick="press('0')">0</button>
+                <button class="btn-eq" onclick="evaluateInput()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 2: PROTECTED MULTI-GAME ENVIRONMENTAL DASHBOARD -->
+    <div class="hub-view">
+        <div class="hub-header">[ NEXUS MULTI-VEHICLE SYSTEM ]</div>
+        <div class="menu-bar">
+            <button class="track-btn active" onclick="loadGame('cars', this)">🏎️ RACING</button>
+            <button class="track-btn" onclick="loadGame('shooter', this)">🔫 SHOOTER</button>
+            <button class="track-btn" onclick="loadGame('voxel', this)">📦 VOXEL CREATIVE</button>
+        </div>
+        <div class="frame-wrapper">
+            <iframe id="game-core-viewport" src="https://bitbucket.io" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // QUICK PANIC REDIRECT BUTTON
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.location.replace('https://google.com');
+            }
+        });
+
+        // MULTI-TRACK LINKS SELECTION DATA
+        const tracks = {
+            cars: "https://bitbucket.io",
+            shooter: "https://github.io",
+            voxel: "https://github.io"
+        };
+
+        function loadGame(trackKey, element) {
+            document.getElementById("game-core-viewport").src = tracks[trackKey];
+            document.querySelectorAll('.track-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // MATRIX SEQUENCE PIN RECOGNITION
+        let currentInput = "";
+        let securityStage = 1;
+        const secretKeys = { step1: "7", step2: "77", step3: "777" };
+
+        function press(val) {
+            currentInput += val;
+            document.getElementById("calc-display").value = currentInput;
+        }
+
+        function clearCalc() {
+            currentInput = "";
+            document.getElementById("calc-display").value = "";
+        }
+
+        function evaluateInput() {
+            const display = document.getElementById("calc-display");
+            
+            if (securityStage === 1) {
+                if (currentInput === secretKeys.step1) {
+                    securityStage = 2; clearCalc(); display.placeholder = "STAGE 2";
+                } else { runStandardMath(); }
+            }
+            else if (securityStage === 2) {
+                if (currentInput === secretKeys.step2) {
+                    securityStage = 3; clearCalc(); display.placeholder = "STAGE 3";
+                } else { securityStage = 1; runStandardMath(); }
+            }
+            else if (securityStage === 3) {
+                if (currentInput === secretKeys.step3) {
+                    document.getElementById("nexus-stealth-layer").remove(); // Explodes interface wall!
+                } else { securityStage = 1; runStandardMath(); }
+            }
+        }
+
+        function runStandardMath() {
+            try {
+                let solution = eval(currentInput);
+                document.getElementById("calc-display").value = solution;
+                currentInput = solution.toString();
+            } catch(e) {
+                document.getElementById("calc-display").value = "Error";
+                currentInput = "";
+            }
+        }
+    </script>
+</body>
+</html>
